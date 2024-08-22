@@ -29,6 +29,7 @@ def fetch_data(api_key, url):
         print(f"Error occurred: {err}")
         return None
 
+@task
 def load_existing_data(file_path):
     """Load existing data from the JSON file."""
     try:
@@ -38,12 +39,14 @@ def load_existing_data(file_path):
     except FileNotFoundError:
         return {"data": []}  # Return empty data structure if file does not exist
 
+@task
 def save_data(data, file_path):
     """Save data to a JSON file."""
     with open(file_path, 'w') as file:
         json.dump(data, file, indent=4)
     print(f"Data has been saved to {file_path}.")
 
+@task
 def merge_data(existing_data, new_data):
     """Merge new data with existing data, updating with delta loading."""
     existing_df = pd.DataFrame(existing_data['data'])
@@ -54,24 +57,38 @@ def merge_data(existing_data, new_data):
     merged_data = {"data": merged_df.to_dict(orient='records')}
     return merged_data
 
+@task
+def convert_data_to_csv(data, file_path):
+    """Convert JSON data to a CSV file."""
+    if 'data' in data and isinstance(data['data'], list):
+        df = pd.DataFrame(data['data'])
+        df.to_csv(file_path, index=False)
+        print(f"Data has been saved to {file_path}.")
+    else:
+        print("No valid data found to convert to CSV.")
+
 @flow
-def main_flow():
-    """Main flow to periodically fetch and process data."""
+def main_flow(start_year, end_year, sort='DESC'):
+    """Main flow to fetch and process data for a given range of years with optional parameters."""
     config = load_config()
     api_key = config.get('api_key')
-    url = "http://api.marketstack.com/v1/eod?access_key=YOUR_ACCESS_KEY&symbols=AAPL"
+    
+    # Construct the URL with date range and optional parameters
+    url = (f"http://api.marketstack.com/v1/eod?access_key={api_key}&symbols=AAPL"
+           f"&date_from={start_year}-01-01&date_to={end_year}-12-31"
+           f"&sort={sort}")
 
     json_file_path = './data/output_data.json'
+    csv_file_path = './data/output_data.csv'
 
-    while True:
-        existing_data = load_existing_data(json_file_path)
-        new_data = fetch_data(api_key, url)
-        
-        if new_data:
-            updated_data = merge_data(existing_data, new_data)
-            save_data(updated_data, json_file_path)
-        
-        time.sleep(60)  # Respect API rate limits
+    existing_data = load_existing_data(json_file_path)
+    new_data = fetch_data(api_key, url)
+    
+    if new_data:
+        updated_data = merge_data(existing_data, new_data)
+        save_data(updated_data, json_file_path)
+        convert_data_to_csv(updated_data, csv_file_path)  # Convert updated data to CSV
 
 if __name__ == '__main__':
-    main_flow()
+    # Example usage
+    main_flow(start_year=2020, end_year=2024)
