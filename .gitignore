@@ -1,0 +1,6 @@
+#Ignore local file
+DataIngestion/data/*
+
+#Ignore Congif files
+ConfigFiles/*
+
