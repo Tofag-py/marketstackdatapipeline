@@ -52,7 +52,6 @@ def merge_data(existing_data, new_data):
     existing_df = pd.DataFrame(existing_data['data'])
     new_df = pd.DataFrame(new_data['data'])
 
-    # Assuming 'date' is the unique key to identify records
     merged_df = pd.concat([existing_df, new_df]).drop_duplicates(subset='date', keep='last')
     merged_data = {"data": merged_df.to_dict(orient='records')}
     return merged_data
@@ -73,7 +72,6 @@ def main_flow(start_year, end_year, sort='DESC'):
     config = load_config()
     api_key = config.get('api_key')
     
-    # Construct the URL with date range and optional parameters
     url = (f"http://api.marketstack.com/v1/eod?access_key={api_key}&symbols=AAPL"
            f"&date_from={start_year}-01-01&date_to={end_year}-12-31"
            f"&sort={sort}")
@@ -90,5 +88,4 @@ def main_flow(start_year, end_year, sort='DESC'):
         convert_data_to_csv(updated_data, csv_file_path)  # Convert updated data to CSV
 
 if __name__ == '__main__':
-    # Example usage
     main_flow(start_year=2020, end_year=2024)
