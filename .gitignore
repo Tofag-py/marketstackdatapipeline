@@ -1,6 +1,15 @@
 #Ignore local file
 DataIngestion/data/*
 
+#ignore cache file
+DataIngestion/__pycache__
+
+
 #Ignore Congif files
 ConfigFiles/*
+
+#ignore client propertires files
+client.properties
+
+DataIngestion/kafka/client.properties.py
 
