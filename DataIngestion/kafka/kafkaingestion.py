@@ -87,7 +87,16 @@ def kafka_flow():
     produce_message(producer, topic, merged_data)
     
     # Consume messages from Kafka
-    consume_message(topic, config)
+    consumed_message = consume_message(topic, config)
+    
+    return consumed_message
+
+@task
+def use_consumer():
+    # Call kafka_flow() and get consumed messages
+    consumed_messages = kafka_flow()
+    return consumed_messages
+
 
 if __name__ == "__main__":
     kafka_flow()
