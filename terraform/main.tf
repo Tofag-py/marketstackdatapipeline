@@ -10,9 +10,7 @@ resource "google_storage_bucket" "marketstack_ingress_lake" {
   name     = "marketstack-data-lake"
   location = "US"
 
-  lifecycle {
-    prevent_destroy = true
-  }
+  
 }
 
 # Define a Google Compute Engine instance

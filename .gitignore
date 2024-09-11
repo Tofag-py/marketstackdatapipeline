@@ -13,3 +13,9 @@ client.properties
 
 DataIngestion/kafka/client.properties.py
 
+#ignore terraform files
+terraform/.terraform
+
+terraform/*tfstate*
+
+terraform/.terraform*
