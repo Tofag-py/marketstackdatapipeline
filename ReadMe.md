@@ -27,7 +27,7 @@ The Real-Time Market Data Pipeline is a comprehensive data engineering project d
 - **Power BI:** Connects to Google BigQuery for creating interactive dashboards and reports. Provides insights and visualizations based on the ingested data.
 
 ### Orchestration
-- **Apache Airflow:** Manages and schedules the data pipelines. Handles the workflow of data ingestion, processing, and transfer between components.
+- **Prefect:** Manages and schedules the data pipelines. Handles the workflow of data ingestion, processing, and transfer between components.
 
 ### Monitoring
 - **Grafana:** Used for monitoring and visualizing system performance and metrics. Connects to Google Cloud Monitoring for real-time dashboards.
@@ -97,4 +97,4 @@ Submit a Pull Request:
 This project is licensed under the MIT License.
 
 **Contact**
-For any questions or issues, please contact Your Name.
+For any questions or issues, please contact .
